@@ -106,17 +106,31 @@ bullBtnNo.addEventListener("click", () => {
 
 //nav bar position
 const nav = document.querySelector(".navbar");
+const navUl = document.querySelector(".navbar-nav");
 const navYes = document.querySelector("#nav-y");
 const navNo = document.querySelector("#nav-n");
+
+function checkScreenSize() {
+  if (window.innerWidth <= 990) {
+    if (nav.style.position === "relative") {
+      navUl.style.backgroundColor = "rgba(0, 0, 0, 0.5)"; 
+    }
+  } else {
+    navUl.style.backgroundColor = "transparent";
+  }
+}
+
 navYes.addEventListener("click", () => {
   nav.style.position = "fixed";
   nav.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+  navUl.style.backgroundColor = "transparent";
   nav.style.width = "80%"; 
   navYes.style.opacity = "1"; 
   navNo.style.opacity = "0.7"; 
 
   localStorage.setItem("navPosition", "fixed");
   localStorage.setItem("navColor", "rgba(0, 0, 0, 0.5)");
+  localStorage.setItem("navUlColor", "transparent");
   localStorage.setItem("navWidth", "80%");
   localStorage.setItem("navYesOpacity", "1");
   localStorage.setItem("navNoOpacity", "0.7");
@@ -125,52 +139,63 @@ navYes.addEventListener("click", () => {
 navNo.addEventListener("click", () => {
   nav.style.position = "relative";
   nav.style.backgroundColor = "transparent";
+  navUl.style.backgroundColor = "rgba(0, 0, 0, 0.5)"; 
   nav.style.width = "100%"; 
   navYes.style.opacity = "0.7"; 
   navNo.style.opacity = "1";
 
+  checkScreenSize();
+
   localStorage.setItem("navPosition", "relative");
   localStorage.setItem("navColor", "transparent");
+  localStorage.setItem("navUlColor", "rgba(0, 0, 0, 0.5)");
   localStorage.setItem("navWidth", "100%");
   localStorage.setItem("navYesOpacity", "0.7");
   localStorage.setItem("navNoOpacity", "1");
 });
 
 window.addEventListener("load", () => {
+  checkScreenSize();
+
   const savedPosition = localStorage.getItem("navPosition") || "relative";
   const savedColor = localStorage.getItem("navColor") || "transparent";
+  const savedUlColor = localStorage.getItem("navUlColor") || "transparent";
   const savedWidth = localStorage.getItem("navWidth") || "100%";
   const savedYesOpacity = localStorage.getItem("navYesOpacity") || "0.7";
   const savedNoOpacity = localStorage.getItem("navNoOpacity") || "1";
 
   nav.style.position = savedPosition;
   nav.style.backgroundColor = savedColor;
+  navUl.style.backgroundColor = savedUlColor;
   nav.style.width = savedWidth;
   navYes.style.opacity = savedYesOpacity;
   navNo.style.opacity = savedNoOpacity;
+
+    checkScreenSize();
 });
+window.addEventListener("resize", checkScreenSize);
 
 
 //random background 
-const navigation = document.querySelector(".navigation");
+const navigationImage = document.querySelector(".navigation img");
 const randomYes = document.querySelector("#random-y");
 const randomNo = document.querySelector("#random-n");
 
 const randomImages = [
-  'url(../images/1.jpg)',
-  'url(../images/2.jpg)',
-  'url(../images/3.jpg)',
-  'url(../images/6.jpg)',
-  'url(../images/7.jpg)',
-  'url(../images/8.jpg)',
-  'url(../images/10.jpg)',
+  'images/1.jpg',
+  'images/2.jpg',
+  'images/3.jpg',
+  'images/6.jpg',
+  'images/7.jpg',
+  'images/8.jpg',
+  'images/10.jpg',
 ];
 
 let interval;
 
-function changeBackgroundRandomly() {
+function changeImageRandomly() {
   const randomIndex = Math.floor(Math.random() * randomImages.length);
-  navigation.style.backgroundImage = randomImages[randomIndex];
+  navigationImage.src = randomImages[randomIndex];
 }
 
 randomYes.addEventListener("click", () => {
@@ -181,9 +206,10 @@ randomYes.addEventListener("click", () => {
   randomYes.style.opacity = "1";
   randomNo.style.opacity = "0.7";
 
-  changeBackgroundRandomly();
-  interval = setInterval(changeBackgroundRandomly, 10000);
+  changeImageRandomly();
+  interval = setInterval(changeImageRandomly, 10000);
 });
+
 
 randomNo.addEventListener("click", () => {
   localStorage.setItem("backgroundMode", "original");
@@ -193,7 +219,8 @@ randomNo.addEventListener("click", () => {
   randomYes.style.opacity = "0.7";
   randomNo.style.opacity = "1";
 
-  navigation.style.backgroundImage = 'url(../images/9.jpg)';
+  navigationImage.src = 'images/9.jpg';
+
   clearInterval(interval);
 });
 
@@ -206,10 +233,10 @@ window.addEventListener("load", () => {
   randomNo.style.opacity = savedNoOpacity;
 
   if (savedMode === "random") {
-    changeBackgroundRandomly();
-    interval = setInterval(changeBackgroundRandomly, 10000);
+    changeImageRandomly();
+    interval = setInterval(changeImageRandomly, 10000);
   } else {
-    navigation.style.backgroundImage = 'url(../images/9.jpg)';
+    navigationImage.src = 'images/9.jpg';
   }
 });
 
@@ -217,24 +244,99 @@ window.addEventListener("load", () => {
 //colors features
 document.addEventListener("DOMContentLoaded", () => {
   const colors = document.querySelectorAll(".color");
-  const defaultColor = "#c5baff";
-  const savedColor = localStorage.getItem("selectedColor") || defaultColor;
+  const defaultColor = "#c5baff"; 
+  const savedColor = localStorage.getItem("selectedColor") || defaultColor; 
 
   document.documentElement.style.setProperty("--main-color", savedColor);
+
   colors.forEach((color) => {
     if (color.getAttribute("data-color") === savedColor) {
-      color.classList.add("active");
+      color.classList.add("active"); 
+      color.style.border = '5px solid white'; 
+      color.style.boxShadow = '0 0 15px 5px ' + savedColor;
+      color.style.opacity = '1';
+    } else {
+      color.style.border = '';
+      color.style.boxShadow = '';
+      color.style.opacity = '';
     }
 
-    color.addEventListener("click", () => {
+    color.addEventListener("mousedown", () => {
+      colors.forEach((otherColor) => {
+        otherColor.classList.remove("active");
+        otherColor.style.border = ''; 
+        otherColor.style.boxShadow = '';
+        otherColor.style.opacity = '';
+      });
+
       const selectedColor = color.getAttribute("data-color");
-
       document.documentElement.style.setProperty("--main-color", selectedColor);
-      localStorage.setItem("selectedColor", selectedColor);
 
-      document.querySelector(".color.active")?.classList.remove("active");
       color.classList.add("active");
+      color.style.border = '5px solid white'; 
+      color.style.boxShadow = '0 0 15px 5px ' + selectedColor;
+      color.style.opacity = '1'; 
+
+      localStorage.setItem("selectedColor", selectedColor);
     });
   });
+});
+
+
+// Reset button
+const resetButton = document.querySelector("#reset");
+
+resetButton.addEventListener("click", () => {
+  localStorage.setItem("backgroundMode", "original");
+  localStorage.setItem("randomYesOpacity", "0.7");
+  localStorage.setItem("randomNoOpacity", "1");
+  localStorage.setItem("bulletsDisplay", "block");
+  localStorage.setItem("bullBtnYesOpacity", "1");
+  localStorage.setItem("bullBtnNoOpacity", "0.7");
+  localStorage.setItem("navPosition", "relative");
+  localStorage.setItem("navColor", "transparent");
+  localStorage.setItem("navWidth", "100%");
+  localStorage.setItem("navYesOpacity", "0.7");
+  localStorage.setItem("navNoOpacity", "1");
+  localStorage.setItem("selectedColor", "#c5baff"); 
+
+  navigationImage.src = 'images/9.jpg';
+  randomYes.style.opacity = "0.7";
+  randomNo.style.opacity = "1";
+  clearInterval(interval);
+
+  bullets.style.display = "block";
+  bullBtnYes.style.opacity = "1";
+  bullBtnNo.style.opacity = "0.7";
+
+  nav.style.position = "relative";
+  nav.style.backgroundColor = "transparent";
+  nav.style.width = "100%";
+  navYes.style.opacity = "0.7";
+  navNo.style.opacity = "1";
+
+  document.documentElement.style.setProperty("--main-color", "#c5baff");
+
+  document.querySelectorAll(".color").forEach((color) => {
+    color.classList.remove("active");
+    color.style.border = '';
+    color.style.boxShadow = '';
+    color.style.opacity = '';
+  });
+
+  const defaultColorElement = Array.from(document.querySelectorAll(".color")).find(
+    (color) => color.getAttribute("data-color") === "#c5baff"
+  );
+
+  if (defaultColorElement) {
+    defaultColorElement.classList.add("active"); 
+    defaultColorElement.style.border = '5px solid white'; 
+    defaultColorElement.style.boxShadow = '0 0 15px 5px var(--main-color)';
+    defaultColorElement.style.opacity = '1'; 
+
+    document.documentElement.style.setProperty("--main-color", "#c5baff");
+
+    localStorage.setItem("selectedColor", "#c5baff");
+  }
 });
 // ======================= end side bar functions================//

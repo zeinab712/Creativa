@@ -52,15 +52,14 @@ html {
 }
 /* ==============================end general================================== */
 /* ==============================start  nav bar=============================== */
-.navigation{
+.navigation img{
   width: 100%;
-  height: 100vh;
-  background-image: url(../images/9.jpg);
-  background-size: cover;
-  position: absolute;
+  height: 100%;
   object-fit: cover; 
   box-sizing: border-box;
-  }
+  position: absolute;
+  z-index: -1;
+}
 .navigation .overlay{
   width: 100%;
   height: 100%;
@@ -82,14 +81,24 @@ html {
   left: 50%;
   transform: translate(-50%, 0%); 
 }
+.navigation .navbar .navbar-nav{
+  border-radius: var(--border-radius);
+}
+@media (max-width: 990px) {
+  .navigation .navbar .navbar-nav{
+      background-color:rgba(0, 0, 0, 0.5);
+  }
+}
 .navigation .navbar .nav-link{
   color: rgb(255, 255, 255) !important;
   font-size: 18px;
   padding:4px;
   margin: 5px;
+  border-radius: var(--border-radius);
+  text-shadow: 1px 1px 5px ;
 }
 .navigation .navbar .nav-link:hover{
-  color: var(--main-color) !important;
+  box-shadow: 0 0 15px 5px var(--main-color);
 }
 .navigation .navbar .navbar-brand{
   color: var(--main-color);
@@ -133,6 +142,26 @@ html {
 }
 .landing .content p{
   opacity: 0.8;
+}
+@media (max-width: 990px) {
+  .landing .content {
+    width: 70%;
+  }
+}
+@media (max-width: 500px){
+  .landing .content {
+    width: 50%;
+  }
+  .landing .content h2 {
+    font-size: 30px;
+  }
+  .landing .content h2 .brand{
+    font-size: 50px;
+    word-wrap: normal;
+  }
+  .landing .content p{
+    font-size: 11px;
+  }
 }
 /* ============start setting bar=============== */
 .landing .menu-toggle {
@@ -223,6 +252,7 @@ html {
 	text-align: center;
 	height: 120px;
 	padding-top: 15px;
+  border-radius: var(--border-radius);
 }
 .landing .sidebar .menu .box h2{
 	font-size: 20px;
@@ -452,9 +482,6 @@ html {
   border: 2px solid var(--main-color);
   border-radius: var(--border-radius);
 }
-.gallery .images img:hover{
-  cursor: pointer;
-}
 @media (max-width: 768px) {
   .gallery .images {
     flex-direction: column;
@@ -470,6 +497,7 @@ html {
 .gallery .images img:hover{
   cursor: pointer;
   transform: scale(1.1) translateZ(15px); 
+  box-shadow: 0 0 15px 5px var(--main-color);
 }
 /* ======start modal image===== */
 .gallery .modal {
