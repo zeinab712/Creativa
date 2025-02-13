@@ -55,15 +55,21 @@ document.addEventListener("DOMContentLoaded", function () {
 // ======================= satrt main======================//
 document.addEventListener("DOMContentLoaded", function () {
   const buttons = document.querySelectorAll(".section button");
-  const resetTime = 24 * 60 * 60 * 1000; 
-  const lastReset = localStorage.getItem("lastReset");
-  const now = new Date().getTime();
+  const now = new Date().getTime(); // التوقيت الحالي بالمللي ثانية
 
-  if (!lastReset || now - lastReset > resetTime) {
-    localStorage.clear(); 
-    localStorage.setItem("lastReset", now);
+  // جلب وقت إعادة التصفير القادم من التخزين
+  let nextResetTime = localStorage.getItem("nextResetTime");
+
+  if (!nextResetTime || now > nextResetTime) {
+    // إذا لم يكن هناك وقت محفوظ أو تجاوزناه، احسب منتصف الليل القادم
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0); // ضبط الوقت ليكون الساعة 00:00 للغد
+
+    localStorage.clear(); // مسح التخزين
+    localStorage.setItem("nextResetTime", midnight.getTime()); // تخزين توقيت إعادة التصفير القادم
   }
 
+  // تحميل الأعداد المخزنة لكل زر
   buttons.forEach((button, index) => {
     let storedCount = localStorage.getItem(`button_${index}`);
     if (storedCount !== null) {
@@ -89,20 +95,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
 // ======================= end main======================//
 // ======================= satrt todo===================//
 document.addEventListener("DOMContentLoaded", function () {
   const tasks = document.querySelectorAll("#taskList li");
-  const today = new Date().toDateString(); 
+  const now = new Date().getTime(); // التوقيت الحالي بالمللي ثانية
 
-  let savedTasks = JSON.parse(localStorage.getItem("dailyTasks")) || {};
-  let lastSavedDate = localStorage.getItem("lastSavedDate");
+  // جلب وقت إعادة التصفير القادم من التخزين
+  let nextResetTime = localStorage.getItem("nextResetTime");
 
-  if (lastSavedDate !== today) {
-      localStorage.setItem("dailyTasks", JSON.stringify({})); 
-      localStorage.setItem("lastSavedDate", today);
-      savedTasks = {};
+  if (!nextResetTime || now > nextResetTime) {
+      // إذا لم يكن هناك وقت محفوظ أو تجاوزناه، نحسب منتصف الليل القادم
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0); // ضبط الوقت ليكون الساعة 00:00 للغد
+
+      localStorage.setItem("dailyTasks", JSON.stringify({})); // إعادة تعيين المهام
+      localStorage.setItem("nextResetTime", midnight.getTime()); // تخزين توقيت إعادة التصفير القادم
   }
+
+  // استرجاع المهام المحفوظة
+  let savedTasks = JSON.parse(localStorage.getItem("dailyTasks")) || {};
 
   tasks.forEach(task => {
       const taskName = task.getAttribute("data-task");
@@ -117,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 });
+
 // ======================= end todo=====================//
   // gsap library for every box in website
 document.addEventListener("DOMContentLoaded", function() {
@@ -130,3 +144,39 @@ document.addEventListener("DOMContentLoaded", function() {
       });
   });
 });
+
+// ======================= start rosary=====================//
+document.addEventListener("DOMContentLoaded", function () {
+  const rosary = document.querySelector(".rosary"); // تحديد المسبحة
+  if (!rosary) return; // التأكد من وجود العنصر قبل التنفيذ
+
+  const buttons = rosary.querySelectorAll(".item button"); // استهداف الأزرار داخل المسبحة فقط
+  const resetButton = rosary.querySelector(".zero"); // زر التصفير فقط داخل المسبحة
+
+  // استرجاع القيم المخزنة عند تحميل الصفحة
+  buttons.forEach((button, index) => {
+    let storedCount = localStorage.getItem(`rosary_button_${index}`); // مفتاح تخزين خاص بالمسبحة
+    if (storedCount !== null) {
+      button.innerText = storedCount; // تعيين القيمة المخزنة للزر
+    }
+
+    // عند الضغط على الزر، زيادته وحفظه في localStorage
+    button.addEventListener("click", function () {
+      let count = parseInt(this.innerText) || 0;
+      count++;
+      this.innerText = count;
+      localStorage.setItem(`rosary_button_${index}`, count);
+    });
+  });
+
+  // عند النقر على زر التصفير
+  resetButton.addEventListener("click", function () {
+    buttons.forEach((button, index) => {
+      button.innerText = "0"; // إعادة التعيين إلى 0
+      localStorage.setItem(`rosary_button_${index}`, "0"); // تحديث القيم في localStorage
+    });
+  });
+});
+
+// ======================= end rosary=====================//
+

@@ -419,13 +419,10 @@ a:hover{
   width: 60px;
 }
 .section .box button.depleted {
-  background-color: red;
+  background-color: #ab886d73;
   color: #fff;
   cursor: default;
   border: none;
-}
-.section .box button.depleted:hover {
-  background-color: darkred;
 }
 /* ==============================end  main================================= */
 /* ==============================start  footer================================= */
@@ -591,7 +588,7 @@ footer .wave {
   transition: background 0.3s ease, color 0.3s ease;
 }
 .todo ul li.completed {
-  background-color: #493628;
+  background-color: #ab886d73;
   color: #fff;
   text-decoration: line-through;
   text-decoration-thickness: 2px;
@@ -599,6 +596,58 @@ footer .wave {
   text-decoration-skip-ink: none;
 }
 /* ============================end todo=================================== */
+/* ============================start rosary=============================== */
+.rosary .title{
+  display: flex;
+  justify-content: center;
+  /* flex-direction:row ; */
+}
+.rosary .title img {
+  width: 55px;
+  margin-left: 15px;
+}
+.rosary .item{
+  margin: auto;
+  text-align: center;
+  padding: 30px;
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.2), -1px -1px 15px rgba(0, 0, 0, 0.2);
+}
+.rosary .item h5{
+  margin-bottom: 20px;
+  line-height: 2;
+}
+.rosary .item button,
+.rosary button{
+  color: var(--white);
+  background-color: var(--main-color);
+  border-radius: var(--border-radius);
+  border: none;
+  height: 60px;
+  font-weight: bold;
+  font-size: 25px;
+  width: 100%;
+  margin: 20px 0px;
+  box-shadow: 2px 2px 10px rgb(0, 0, 0);
+}
+.rosary .item button:hover,
+.rosary button:hover{
+  background-color: var(--secondary);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ============================end rosary================================= */
 
 
 
